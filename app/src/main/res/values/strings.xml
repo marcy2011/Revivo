@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Revivo</string>
+    <string name="offline_title">No Connection</string>
+    <string name="offline_message">Check your Wi-Fi or cellular network connection and try again to access Revivo.</string>
+    <string name="offline_retry">Try Again</string>
+    <string name="offline_toast_no_internet">Still no Internet connection.</string>
+    <string name="error_camera">Unable to open camera</string>
+    <string name="error_files">Unable to open files</string>
+    <string name="offline_icon_desc">No connection icon</string>
+    <string name="upload_notification_channel_name">File Upload</string>
+    <string name="upload_notification_channel_desc">Progress notifications for file uploads</string>
+    <string name="upload_in_progress">Uploading</string>
+    <string name="upload_complete">Upload completed</string>
+</resources>

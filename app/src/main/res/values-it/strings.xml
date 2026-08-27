@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Revivo</string>
+    <string name="offline_title">Nessuna Connessione</string>
+    <string name="offline_message">Verifica la connessione Wi-Fi o dati cellulare e riprova per accedere a Revivo.</string>
+    <string name="offline_retry">Riprova</string>
+    <string name="offline_toast_no_internet">Ancora nessuna connessione ad Internet.</string>
+    <string name="error_camera">Impossibile aprire la fotocamera</string>
+    <string name="error_files">Impossibile aprire i file</string>
+    <string name="offline_icon_desc">Icona connessione assente</string>
+    <string name="upload_notification_channel_name">Caricamento file</string>
+    <string name="upload_notification_channel_desc">Notifiche di progresso per il caricamento dei file</string>
+    <string name="upload_in_progress">Caricamento in corso</string>
+    <string name="upload_complete">Caricamento completato</string>
+</resources>

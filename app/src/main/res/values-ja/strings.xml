@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Revivo</string>
+    <string name="offline_title">接続がありません</string>
+    <string name="offline_message">Wi-Fi またはモバイルデータ通信の接続を確認し、もう一度お試しください。</string>
+    <string name="offline_retry">再試行</string>
+    <string name="offline_toast_no_internet">インターネット接続がありません。</string>
+    <string name="error_camera">カメラを開けません</string>
+    <string name="error_files">ファイルを開けません</string>
+    <string name="offline_icon_desc">接続なしアイコン</string>
+</resources>

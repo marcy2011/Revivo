@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Revivo</string>
+    <string name="offline_title">无网络连接</string>
+    <string name="offline_message">请检查您的 Wi-Fi 或蜂窝移动网络连接，然后重试以访问 Revivo。</string>
+    <string name="offline_retry">重试</string>
+    <string name="offline_toast_no_internet">仍无互联网连接。</string>
+    <string name="error_camera">无法打开相机</string>
+    <string name="error_files">无法打开文件</string>
+    <string name="offline_icon_desc">无网络图标</string>
+</resources>

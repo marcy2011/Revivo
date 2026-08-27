@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Revivo</string>
+    <string name="offline_title">Нет подключения</string>
+    <string name="offline_message">Проверьте подключение к Wi-Fi или мобильной сети и повторите попытку для входа в Revivo.</string>
+    <string name="offline_retry">Повторить</string>
+    <string name="offline_toast_no_internet">Подключение к Интернету отсутствует.</string>
+    <string name="error_camera">Не удалось открыть камеру</string>
+    <string name="error_files">Не удалось открыть файлы</string>
+    <string name="offline_icon_desc">Значок отсутствия связи</string>
+</resources>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Revivo</string>
+    <string name="offline_title">لا يوجد اتصال</string>
+    <string name="offline_message">تحقق من اتصال Wi-Fi أو بيانات الجوال وحاول مجددًا للوصول إلى Revivo.</string>
+    <string name="offline_retry">إعادة المحاولة</string>
+    <string name="offline_toast_no_internet">لا يوجد اتصال بالإنترنت حتى الآن.</string>
+    <string name="error_camera">تعذر فتح الكاميرا</string>
+    <string name="error_files">تعذر فتح الملفات</string>
+    <string name="offline_icon_desc">أيقونة لا يوجد اتصال</string>
+</resources>

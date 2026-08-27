@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Revivo</string>
+    <string name="offline_title">Aucune connexion</string>
+    <string name="offline_message">Vérifiez votre connexion Wi-Fi ou données mobiles et réessayez pour accéder à Revivo.</string>
+    <string name="offline_retry">Réessayer</string>
+    <string name="offline_toast_no_internet">Toujours aucune connexion Internet.</string>
+    <string name="error_camera">Impossible d\'ouvrir l\'appareil photo</string>
+    <string name="error_files">Impossible d\'ouvrir les fichiers</string>
+    <string name="offline_icon_desc">Icône hors ligne</string>
+</resources>
