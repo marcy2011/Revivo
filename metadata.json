@@ -1,8 +1,0 @@
-{
-  "name": "Revivo",
-  "description": "Un app minimal e pulita per mostrare la pagina del sito https://revivo.altervista.org/webapp_android_ios.html",
-  "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
-}

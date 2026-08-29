@@ -12,6 +12,7 @@ import android.webkit.WebViewClient
 import android.webkit.WebChromeClient
 import android.webkit.JavascriptInterface
 import android.widget.Toast
+import android.util.Log
 import android.net.Uri
 import android.content.Intent
 import android.provider.MediaStore
@@ -225,8 +226,25 @@ fun AppNavigation() {
         isSplashVisible = false
     }
 
-    BackHandler(enabled = !isSplashVisible && !isOffline && webViewInstance?.canGoBack() == true) {
-        webViewInstance?.goBack()
+    BackHandler(enabled = !isSplashVisible && !isOffline && (webViewInstance?.canGoBack() == true || webViewInstance?.url != "https://revivo.altervista.org/webapp_android_ios.html")) {
+        val canGoBack = webViewInstance?.canGoBack() == true
+        val currentUrl = webViewInstance?.url
+        val isInitialUrl = currentUrl == "https://revivo.altervista.org/webapp_android_ios.html"
+
+        Log.d("BackHandler", "BackHandler triggered.")
+        Log.d("BackHandler", "isSplashVisible: $isSplashVisible, isOffline: $isOffline, canGoBack: $canGoBack, isInitialUrl: $isInitialUrl")
+
+        if (canGoBack) {
+            Log.d("BackHandler", "WebView can go back. Navigating back.")
+            webViewInstance?.goBack()
+        } else if (!isInitialUrl) {
+            Log.d("BackHandler", "Not initial URL, but cannot go back. Loading initial URL.")
+            webViewInstance?.loadUrl("https://revivo.altervista.org/webapp_android_ios.html")
+        } else {
+            Log.d("BackHandler", "Cannot go back and at initial URL. App will close.")
+            Toast.makeText(context, "Premi ancora per uscire", Toast.LENGTH_SHORT).show()
+            activity?.finish()
+        }
     }
 
     val themeDetectorJs = """
@@ -353,12 +371,14 @@ fun AppNavigation() {
 
                         override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
                             super.onPageStarted(view, url, favicon)
+                            Log.d("WebView", "Page started loading: $url")
                             isWebLoading = true
                             view?.evaluateJavascript(themeDetectorJs, null)
                         }
 
                         override fun onPageFinished(view: WebView?, url: String?) {
                             super.onPageFinished(view, url)
+                            Log.d("WebView", "Page finished loading: $url. Can go back: ${view?.canGoBack()}")
                             isWebLoading = false
                             isWebPageLoaded = true
                             

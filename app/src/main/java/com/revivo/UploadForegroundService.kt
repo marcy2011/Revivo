@@ -68,7 +68,7 @@ class UploadForegroundService : Service() {
                 val fileName = match.groupValues.getOrNull(1)?.trim() ?: ""
                 val percent = match.groupValues.getOrNull(2)?.toIntOrNull() ?: 0
                 val detail = match.groupValues.getOrNull(3)?.trim() ?: ""
-                val isComplete = percent >= 100
+                val isComplete = percent >= 99
                 return UploadProgressInfo(
                     fileName = fileName,
                     percent = percent.coerceIn(0, 100),
@@ -82,7 +82,7 @@ class UploadForegroundService : Service() {
             if (percentMatch != null) {
                 val percent = percentMatch.groupValues[1].toIntOrNull() ?: 0
                 val fileName = cleaned.substringBefore(":").trim()
-                val isComplete = percent >= 100
+                val isComplete = percent >= 99
                 return UploadProgressInfo(
                     fileName = fileName,
                     percent = percent.coerceIn(0, 100),
@@ -198,7 +198,7 @@ class UploadForegroundService : Service() {
             notificationManager.notify(NOTIFICATION_ID, notification)
         }
 
-        if (isComplete || percent >= 100) {
+        if (isComplete || percent >= 99) {
             handler.postDelayed(stopRunnable, 4000)
         }
     }
@@ -245,7 +245,7 @@ class UploadForegroundService : Service() {
         val title = if (fileName.isNotEmpty()) fileName else getString(R.string.upload_in_progress)
 
         val contentText = when {
-            isComplete || percent >= 100 -> getString(R.string.upload_complete)
+            isComplete || percent >= 99 -> getString(R.string.upload_complete)
             detail.isNotEmpty() -> "$percent% ($detail)"
             else -> "$percent%"
         }
@@ -261,8 +261,8 @@ class UploadForegroundService : Service() {
                 .setContentText(contentText)
                 .setSmallIcon(iconRes)
                 .setContentIntent(pendingIntent)
-                .setOngoing(!isComplete && percent < 100)
-                .setAutoCancel(isComplete || percent >= 100)
+                .setOngoing(!isComplete && percent < 99)
+                .setAutoCancel(isComplete || percent >= 99)
                 .setOnlyAlertOnce(true)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
 
