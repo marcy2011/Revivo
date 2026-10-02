@@ -106,6 +106,15 @@ class WebAppUploadBridge(private val context: Context) {
     }
 }
 
+class WebAppClipboardBridge(private val context: Context) {
+    @JavascriptInterface
+    fun copyText(text: String) {
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+        val clip = android.content.ClipData.newPlainText("Copied Text", text)
+        clipboard.setPrimaryClip(clip)
+    }
+}
+
 @Composable
 fun AppNavigation() {
     val context = LocalContext.current
@@ -226,23 +235,10 @@ fun AppNavigation() {
         isSplashVisible = false
     }
 
-    BackHandler(enabled = !isSplashVisible && !isOffline && (webViewInstance?.canGoBack() == true || webViewInstance?.url != "https://revivo.altervista.org/webapp_android_ios.html")) {
-        val canGoBack = webViewInstance?.canGoBack() == true
-        val currentUrl = webViewInstance?.url
-        val isInitialUrl = currentUrl == "https://revivo.altervista.org/webapp_android_ios.html"
-
-        Log.d("BackHandler", "BackHandler triggered.")
-        Log.d("BackHandler", "isSplashVisible: $isSplashVisible, isOffline: $isOffline, canGoBack: $canGoBack, isInitialUrl: $isInitialUrl")
-
-        if (canGoBack) {
-            Log.d("BackHandler", "WebView can go back. Navigating back.")
+    BackHandler(enabled = !isSplashVisible && !isOffline) {
+        if (webViewInstance?.canGoBack() == true) {
             webViewInstance?.goBack()
-        } else if (!isInitialUrl) {
-            Log.d("BackHandler", "Not initial URL, but cannot go back. Loading initial URL.")
-            webViewInstance?.loadUrl("https://revivo.altervista.org/webapp_android_ios.html")
         } else {
-            Log.d("BackHandler", "Cannot go back and at initial URL. App will close.")
-            Toast.makeText(context, "Premi ancora per uscire", Toast.LENGTH_SHORT).show()
             activity?.finish()
         }
     }
@@ -271,6 +267,23 @@ fun AppNavigation() {
                 }
             }
             setInterval(notifyTheme, 400);
+        })();
+    """.trimIndent()
+
+    val clipboardPolyfillJs = """
+        (function() {
+            var copyFn = function(text) {
+                if (window.AndroidClipboardBridge && window.AndroidClipboardBridge.copyText) {
+                    window.AndroidClipboardBridge.copyText(text);
+                    return Promise.resolve();
+                }
+                return Promise.reject();
+            };
+            if (!navigator.clipboard) {
+                navigator.clipboard = { writeText: copyFn };
+            } else {
+                navigator.clipboard.writeText = copyFn;
+            }
         })();
     """.trimIndent()
 
@@ -310,13 +323,23 @@ fun AppNavigation() {
                         WebAppUploadBridge(ctx),
                         "RevivoNativeUpload"
                     )
+                    addJavascriptInterface(
+                        WebAppClipboardBridge(ctx),
+                        "AndroidClipboardBridge"
+                    )
+                    activity?.let {
+                        addJavascriptInterface(
+                            RevivoNative(it),
+                            "RevivoNative"
+                        )
+                    }
 
                     settings.apply {
                         javaScriptEnabled = true
                         domStorageEnabled = true
                         allowFileAccess = true
                         allowContentAccess = true
-                        mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                        mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
                         mediaPlaybackRequiresUserGesture = false
                         cacheMode = WebSettings.LOAD_DEFAULT
                         useWideViewPort = true
@@ -337,8 +360,13 @@ fun AppNavigation() {
                         ): Boolean {
                             val uri = request?.url ?: return false
                             val url = uri.toString()
-                            if (url.startsWith("http://") || url.startsWith("https://")) {
+                            if (url.startsWith("https://revivo.altervista.org")) {
                                 return false
+                            }
+                            if (url.startsWith("http://revivo.altervista.org")) {
+                                val httpsUrl = url.replaceFirst("http://", "https://")
+                                view?.loadUrl(httpsUrl)
+                                return true
                             }
                             return try {
                                 val intent = Intent(Intent.ACTION_VIEW, uri)
@@ -374,6 +402,7 @@ fun AppNavigation() {
                             Log.d("WebView", "Page started loading: $url")
                             isWebLoading = true
                             view?.evaluateJavascript(themeDetectorJs, null)
+                            view?.evaluateJavascript(clipboardPolyfillJs, null)
                         }
 
                         override fun onPageFinished(view: WebView?, url: String?) {
@@ -384,7 +413,7 @@ fun AppNavigation() {
                             
                             view?.evaluateJavascript(
                                 "(function() { " +
-                                "  var css = '* { -webkit-user-select: none !important; -webkit-touch-callout: none !important; user-select: none !important; } img { -webkit-user-drag: none !important; }'; " +
+                                "  var css = '*:not(input):not(textarea) { -webkit-user-select: none !important; -webkit-touch-callout: none !important; user-select: none !important; } img { -webkit-user-drag: none !important; }'; " +
                                 "  var style = document.createElement('style'); " +
                                 "  style.type = 'text/css'; " +
                                 "  style.appendChild(document.createTextNode(css)); " +
@@ -393,6 +422,7 @@ fun AppNavigation() {
                                 null
                             )
                             view?.evaluateJavascript(themeDetectorJs, null)
+                            view?.evaluateJavascript(clipboardPolyfillJs, null)
                         }
                     }
 
